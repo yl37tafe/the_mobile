@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
+import NetInfo from "@react-native-community/netinfo";
+import { infoMessage  } from '../utils/flashMessage';
 
 // Import helper code
 import Settings from '../constants/Settings';
 import { RoiGetPeople } from '../utils/RoiApi';
-import { PopupOk } from "../utils/Popup";
+import { PopupOk, PopupOkCancel } from "../utils/Popup";
 
 // Import styling and components
 import { TextParagraph, TextH1, TextH2 } from "../components/StyledText";
 import Styles from "../styles/MainStyle";
 import { MyButton } from '../components/MyButton';
+import { RoiDeletePerson } from '../utils/Api';
 
 
 export default function ViewPeopleScreen(props) {
@@ -45,21 +48,103 @@ export default function ViewPeopleScreen(props) {
 
   function showAddPerson() {
     
-    console.log("show add person...")
+    props.navigation.navigate('Root', {screen: "AddPerson"});
 
   }
 
+  function showViewPerson(person) {
+    
+    props.navigation.navigate('ViewPerson', {id: person.id});
+
+  }
+
+  function showEditPerson(person) {
+    
+    props.navigation.navigate('EditPerson', {id: person.id});
+
+  }
+
+  function deletePerson(person){
+
+    PopupOkCancel(
+
+      "Delete person?",
+
+      `Are you sure you want to delete ${person.name}?`,
+      
+      () => {
+        RoiDeletePerson(person.id)
+          .then(data => {
+            PopupOk("Person deleted", `${person.name} has been deleted`)
+            refreshPersonList()
+          })
+
+          .catch(error => {
+            PopupOk("Error", error)
+          })
+      },
+
+      () => {}
+
+    )
+  }
+
+  function displayConnectionMessage() {
+    console.log('displayConnectionMessage');
+    // Get network connection status
+    NetInfo.fetch().then((status) => {
+      // Check if not connected to the Internet
+      if (!status.isConnected) {
+        // Display the flash message
+        infoMessage ('No internet connection', 'You will only see cached data until you \nhave an active internet connection again');
+      }
+    });
+  }
 
   // Display all people data
   function displayPeople() {
+
+    displayConnectionMessage()
+
+    if (!people) return
     
     // Loop through each item and turn into appropriate output and then return the result
     return people.map(p => {
 
       // Create an output view for each item
       return (
-        <View key={p.id}>
-          <TextParagraph>{p.name}</TextParagraph>
+        <View key={p.id} style = {Styles.personListItem}>
+          <View style = {Styles.personListItemDetails}>
+            <TextParagraph style = {Styles.personListItemName}>{p.name}</TextParagraph>
+            <TextParagraph style = {Styles.personListItemText}>{p.department ? p.department.name : "---"}</TextParagraph>
+            <TextParagraph style = {Styles.personListItemText}>{p.phone}</TextParagraph>
+          </View>
+          <View style = {Styles.personListItemButtons}>
+            <MyButton
+              text="Info"
+              type="major"
+              size="small"
+              onPress={() => {showViewPerson(p)}}
+              buttonStyle={Styles.personListItemButton}
+              textStyle={Styles.personListItemButtonText}
+            />
+            <MyButton
+              text="Edit"
+              type="default"
+              size="small"
+              onPress={() => {showEditPerson(p)}}
+              buttonStyle={Styles.personListItemButton}
+              textStyle={Styles.personListItemButtonText}
+            />
+            <MyButton
+              text="Delete"
+              type="minor"
+              size="small" 
+              onPress={() => {deletePerson(p)}}
+              buttonStyle={Styles.personListItemButton}
+              textStyle={Styles.personListItemButtonText}
+            />
+          </View>
         </View>
       )
 
@@ -91,7 +176,7 @@ export default function ViewPeopleScreen(props) {
           
         <TextH1 style={{marginTop:0}}>Listing all people</TextH1>
 
-        <View>
+        <View style = {Styles.personList}>
           {displayPeople()}
         </View>
 

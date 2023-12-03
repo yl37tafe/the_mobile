@@ -9,6 +9,7 @@ import Styles from "../styles/MainStyle";
 // Import navigators & screens
 import HomeScreen from '../screens/HomeScreen';
 import HelpScreen from '../screens/HelpScreen';
+import AddPersonScreen from '../screens/AddPersonScreen';
 import PeopleNavigator from './PeopleNavigator';
 
 
@@ -45,6 +46,16 @@ export default function BottomTabNavigator({ navigation, route }) {
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-people" />
         }}
       />
+
+      <BottomTab.Screen
+        name="AddPerson"
+        component={AddPersonScreen}
+        options={{
+          title: 'Add Person',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-person-add" />,
+        }}
+      />
+
       <BottomTab.Screen
         name="Help"
         component={HelpScreen}

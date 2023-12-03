@@ -191,14 +191,14 @@ export default StyleSheet.create({
     marginBottom: 30,
   },
   homeButtonContainer: {
-    flexDirection: 'row', //column
+    flexDirection: 'column', //column
     justifyContent: 'center',
   },
   homeButton: {
     flex: 1,
-    marginHorizontal: 10,
+    marginHorizontal: 100,
     paddingHorizontal: 10,
-    // marginVertical: 10,
+    marginVertical: 10,
   },
   homeLogoContainer: {
     alignItems: 'center',
@@ -260,7 +260,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 15,
     paddingHorizontal: 5,
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderBottomCoIor: Colours.roiLightGrey,
   },
   personListItemDetails: {

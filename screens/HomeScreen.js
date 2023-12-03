@@ -43,7 +43,7 @@ export default function HomeScreen(props) {
         
         
         <View style={Styles.homeHeadingContainer}>
-          <Text style={Styles.homeHeading}>ROI HR Management System</Text>
+          <Text style={Styles.homeHeading}>ROI HR Management App</Text>
         </View>
         
         <View style={Styles.homeButtonContainer}>
@@ -55,12 +55,17 @@ export default function HomeScreen(props) {
             buttonStyle={Styles.homeButton}
           />
           <MyButton
-            text="Show help screen"
+            text="Help"
             type="default"      // default*|major|minor
             size="large"      // small|medium*|large
             onPress={showHelp}
             buttonStyle={Styles.homeButton}
           />
+        </View>
+
+        <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
+        <Text style={{ color: 'gray', fontSize: 14 }}>Developed by</Text>
+        <Text style={{ fontSize: 18 }}>Yuan Liu</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
